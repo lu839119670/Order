@@ -154,4 +154,22 @@ public class Dao {
         db.close();
         return false;
     }
+
+    /**
+     * 通过菜品名称获取菜品分类
+     *
+     * @param name 菜品名称
+     * @return 菜品种类
+     */
+    public String getCategory(String name) {
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        String sql = "select category from menu where name = ?";
+        Cursor cursor = db.rawQuery(sql, new String[]{name});
+        if (cursor.moveToNext()) {
+            return cursor.getString(0);
+        }
+        cursor.close();
+        db.close();
+        return "";
+    }
 }

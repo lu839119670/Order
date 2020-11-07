@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.order.Bean.DishEnum;
 import com.example.order.Bean.Menu;
 import com.example.order.Bean.Preview;
 import com.example.order.Dao.Dao;
@@ -52,7 +53,7 @@ public class PreviewListviewAdapter extends BaseAdapter {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int i);
+        void onItemClick(int i, DishEnum dish);
     }
 
     public void update(List<Preview> list) {
@@ -89,9 +90,8 @@ public class PreviewListviewAdapter extends BaseAdapter {
                 dao.updatePreviewNumber(dao.getPreviewNumber(list.get(i).getName()) + 1, list.get(i).getName());
                 viewHolder.number.setText(dao.getPreviewNumber(list.get(i).getName()) + "");
 
-
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(i);
+                    mOnItemClickListener.onItemClick(i, DishEnum.pauseToDishEnum(dao.getCategory(list.get(i).getName())));
                 }
             }
         });
@@ -111,7 +111,7 @@ public class PreviewListviewAdapter extends BaseAdapter {
                 }
 
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(i);
+                    mOnItemClickListener.onItemClick(i, DishEnum.pauseToDishEnum(dao.getCategory(list.get(i).getName())));
                 }
             }
         });

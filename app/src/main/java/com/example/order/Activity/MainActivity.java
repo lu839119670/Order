@@ -22,8 +22,11 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    // 左上角
     private ListView listView;
+    // 左上角菜单类别
     private List<String> category;
+    // 左上角listview的监听器
     private ListViewAdapter listViewAdapter;
     private LinearLayout fragment;
     private Button table;
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 枚举数组，用于确定从数据库中取得哪个类别菜品<br/>
      * 顺序可以更改，改了之后左上的listView顺序也会变化
      */
-    private final DishEnum[] DISH_ARRAY = {DishEnum.ENTREE, DishEnum.KOREA, DishEnum.JAPAN, DishEnum.DRINK, DishEnum.SWEETS};
+    private static final DishEnum[] DISH_ARRAY = {DishEnum.ENTREE, DishEnum.KOREA, DishEnum.JAPAN, DishEnum.DRINK, DishEnum.SWEETS};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +66,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                updateMenuView(i);
+                updateMenuView(DISH_ARRAY[i]);
             }
         });
 
         // 左下角ListView监听
         previewListviewAdapter.setaOnItemClickListener(new PreviewListviewAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int i) {
-                updateMenuView(i);
+            public void onItemClick(int i, DishEnum dish) {
+                updateMenuView(dish);
+
+                // 通过寻找物品在菜单中的位置来进行跳转
+                // 获取菜品名称
+                String name = dao.queryPreview().get(i).getName();
+                // 获取此菜单内容数量
+                List<Menu> menus = dao.createmenu(dish);
+                // 遍历对比，对上就进行跳转
+                for (int j = 0; j < menus.size(); j++) {
+                    if (name.equals(menus.get(j).getName())) {
+                        // 跳转，参数是adapter中内容的位置，而不是像素
+                        recyclerView.scrollToPosition(j);
+                    }
+                }
+
             }
         });
 
@@ -94,14 +111,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *
      * @param witch 需要哪个
      */
-    private void updateMenuView(int witch) {
-        List<Menu> menus = dao.createmenu(DISH_ARRAY[witch]);
+    private void updateMenuView(DishEnum witch) {
+        List<Menu> menus = dao.createmenu(witch);
         gridAdapter.update(menus);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(gridAdapter);
-        recyclerView.invalidateItemDecorations();
-        recyclerView.invalidate();
     }
 
     private void init() {
