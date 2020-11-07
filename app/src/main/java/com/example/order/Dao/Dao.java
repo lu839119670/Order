@@ -84,10 +84,7 @@ public class Dao {
         db.close();
         return list;
     }
-
-
-
-
+    
     public int getPreviewNumber(String name) {
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
         String sql = "select number from preview where name = ?";
@@ -122,7 +119,6 @@ public class Dao {
         cursor.close();
         db.close();
         return true;
-
     }
 
     public void updatePreviewNumber(int number, String name) {

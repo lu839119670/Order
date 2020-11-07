@@ -97,15 +97,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 右边RecycleView监听
         gridAdapter.setOnItemClickListener(new GridAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int i) {
+            public void onItemClick(Menu menu) {
                 // 点击之后刷新左下角的listview
                 fragment.setVisibility(View.GONE);
                 listView1.setVisibility(View.VISIBLE);
                 List<Preview> previews = dao.queryPreview();
                 previewListviewAdapter.update(previews);
-                listView1.setAdapter(previewListviewAdapter);
+                previewListviewAdapter.notifyDataSetChanged();
                 setTotalNumber();
                 setTotalMoney();
+
+                for (int i = 0; i < previews.size(); i++) {
+                    if (menu.getName().equals(previews.get(i).getName())) {
+                        listView1.smoothScrollToPosition(i);
+                    }
+                }
             }
         });
     }

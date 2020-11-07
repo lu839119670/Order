@@ -111,6 +111,7 @@ public class PreviewListviewAdapter extends BaseAdapter {
                 } else {
                     dao.deletePreviewItem(list.get(i).getName());
                     list.remove(i);
+                    notifyDataSetChanged();
                 }
 
                 if (mOnItemClickListener != null) {

@@ -56,7 +56,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
 
     public interface OnItemClickListener {
-        void onItemClick(int i);
+        void onItemClick(Menu i);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -100,7 +100,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                     }
 
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(position);
+                        mOnItemClickListener.onItemClick(list.get(position));
                     }
                 }
             });
