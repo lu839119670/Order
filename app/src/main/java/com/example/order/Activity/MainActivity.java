@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<Preview> previews;
     private AlertDialog alertDialog;
     private List<Menu> createmenu;
-    public static int norNum;
+    public static int norNum =  1;
     public static int nortab = 0;
     private PreviewListviewAdapter previewListviewAdapter;
 
@@ -139,19 +139,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_table, null);
                 TextView cancle = v.findViewById(R.id.textView28);
                 final TextView oneTable = v.findViewById(R.id.textView19);
-                TextView twoTable = v.findViewById(R.id.textView21);
-                TextView threeTable = v.findViewById(R.id.textView23);
-                TextView foutTable = v.findViewById(R.id.textView25);
+                final TextView twoTable = v.findViewById(R.id.textView21);
+                final TextView threeTable = v.findViewById(R.id.textView23);
+                final TextView foutTable = v.findViewById(R.id.textView25);
                 Button minus = v.findViewById(R.id.button6);
-                Button add = v.findViewById(R.id.button7);
-                TextView number = v.findViewById(R.id.textView27);
+                final Button add = v.findViewById(R.id.button7);
+                final TextView number = v.findViewById(R.id.textView27);
                 Button choose = v.findViewById(R.id.button8);
                 final RelativeLayout table1 = v.findViewById(R.id.table1);
-                RelativeLayout table2 = v.findViewById(R.id.table2);
-                RelativeLayout table3 = v.findViewById(R.id.table3);
-                RelativeLayout table4 = v.findViewById(R.id.table4);
-
-                if (dao.chechTable(1)) {
+                final RelativeLayout table2 = v.findViewById(R.id.table2);
+                final RelativeLayout table3 = v.findViewById(R.id.table3);
+                final RelativeLayout table4 = v.findViewById(R.id.table4);
+                number.setText(norNum+"");
+                if (dao.chechTable(1)){
                     table1.setBackgroundResource(R.color.pink);
                     oneTable.setText("有人");
                 } else {
@@ -187,34 +187,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (dao.chechTable(1)) {
                             table1.setBackgroundResource(R.color.pink);
                             oneTable.setText("有人");
-                        } else {
-
-                            if (nortab==0){
-                                oneTable.setText("asd");
-                            }
+                        }else{
+                            table1.setBackgroundResource(R.color.orienge);
+                            nortab=1;
                         }
                     }
                 });
                 table2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        if (dao.chechTable(2)){
+                            table2.setBackgroundResource(R.color.pink);
+                            twoTable.setText("有人");
+                        }else{
+                            table2.setBackgroundResource(R.color.orienge);
+                            nortab=2;
+                        }
                     }
                 });
                 table3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        if (dao.chechTable(3)){
+                            table3.setBackgroundResource(R.color.pink);
+                            threeTable.setText("有人");
+                        }else{
+                            table3.setBackgroundResource(R.color.orienge);
+                            nortab=3;
+                        }
                     }
                 });
                 table4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        if (dao.chechTable(4)){
+                            table4.setBackgroundResource(R.color.pink);
+                            foutTable.setText("有人");
+                        }else{
+                            table4.setBackgroundResource(R.color.orienge);
+                            nortab=4;
+                        }
                     }
                 });
 
+                minus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                       if (norNum>1){
+                           norNum--;
+                           number.setText(norNum+"");
+                       }
 
+                    }
+                });
+                add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        norNum++;
+                        number.setText(norNum+"");
+                    }
+                });
+                choose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+                cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
                 builder.setView(v);
                 alertDialog = builder.create();
                 alertDialog.show();
