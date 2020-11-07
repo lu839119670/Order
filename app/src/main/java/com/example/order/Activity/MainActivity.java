@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<Menu> createmenu;
     public static int norNum = 1;
     public static int nortab = 0;
+    private TextView totalNumber;
+    private TextView totalMoney;
     private PreviewListviewAdapter previewListviewAdapter;
 
     /**
@@ -88,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         recyclerView.scrollToPosition(j);
                     }
                 }
-
+                setTotalNumber();
+                setTotalMoney();
             }
         });
 
@@ -102,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 List<Preview> previews = dao.queryPreview();
                 previewListviewAdapter.update(previews);
                 listView1.setAdapter(previewListviewAdapter);
+                setTotalNumber();
+                setTotalMoney();
             }
         });
     }
@@ -120,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void init() {
+        totalNumber=findViewById(R.id.textView5);
+        totalMoney= findViewById(R.id.textView8);
         listView1 = findViewById(R.id.listview1);
         xiadan = findViewById(R.id.button2);
         fragment = findViewById(R.id.fragment);
@@ -287,6 +294,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setView(v);
         alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    public void setTotalNumber(){
+        List<Preview> que = dao.queryPreview();
+        int num=0;
+        if (que!=null){
+            for (int i=0;i<que.size();i++){
+               num+=que.get(i).getNumber();
+            }
+            totalNumber.setText(num+"");
+        }
+    }
+
+    public void setTotalMoney(){
+        List<Preview> que = dao.queryPreview();
+        int num=0;
+        double money=0;
+        double totalmoneies=0;
+        if (que!=null){
+            for (int i=0;i<que.size();i++){
+                num=que.get(i).getNumber();
+                money=que.get(i).getMoney();
+                totalmoneies += num*money;
+            }
+            totalMoney.setText("￥ "+totalmoneies+"");
+        }
     }
 
     @Override

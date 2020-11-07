@@ -85,6 +85,9 @@ public class Dao {
         return list;
     }
 
+
+
+
     public int getPreviewNumber(String name) {
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
         String sql = "select number from preview where name = ?";
