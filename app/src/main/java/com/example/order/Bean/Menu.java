@@ -1,7 +1,7 @@
 package com.example.order.Bean;
 
 public class Menu {
-    private String category;
+    private DishEnum category;
     private String name;
     private double money;
     private String weight;
@@ -9,7 +9,7 @@ public class Menu {
     private String spicy;
     private int image;
 
-    public Menu(String category, String name, double money, String weight, int number, String spicy, int image) {
+    public Menu(DishEnum category, String name, double money, String weight, int number, String spicy, int image) {
         this.category = category;
         this.name = name;
         this.money = money;
@@ -29,11 +29,11 @@ public class Menu {
     public Menu() {
     }
 
-    public String getCategory() {
+    public DishEnum getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(DishEnum category) {
         this.category = category;
     }
 

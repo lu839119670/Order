@@ -14,15 +14,16 @@ import java.util.List;
 public class ListViewAdapter extends BaseAdapter {
     private Context context;
     private List<String> list;
-    public ListViewAdapter(List<String> list,Context context){
-        this.context=context;
-        this.list=list;
+
+    public ListViewAdapter(List<String> list, Context context) {
+        this.context = context;
+        this.list = list;
 
     }
 
     @Override
     public int getCount() {
-        if (list!=null){
+        if (list != null) {
             return list.size();
         }
         return 0;
@@ -41,18 +42,19 @@ public class ListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
-        if (view==null){
-            viewHolder=new ViewHolder();
-            view= LayoutInflater.from(context).inflate(R.layout.item_listview, null);
-            viewHolder.category=view.findViewById(R.id.textView);
+        if (view == null) {
+            viewHolder = new ViewHolder();
+            view = LayoutInflater.from(context).inflate(R.layout.item_listview, null);
+            viewHolder.category = view.findViewById(R.id.textView);
             view.setTag(viewHolder);
-        }else{
-            viewHolder= (ViewHolder) view.getTag();
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
         }
         viewHolder.category.setText(list.get(i));
         return view;
     }
-    class ViewHolder{
+
+    class ViewHolder {
         TextView category;
     }
 }
