@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 setTotalMoney();
 
                 // 通过寻找物品在菜单中的位置来进行跳转
+                // 新增加代码请写在这段代码的上方，否则可能不被执行
+                // 判断是否少了个元素，防止发生OutOfBounds
                 List<Preview> previews = dao.queryPreview();
                 if (previews.size() <= i) return;
                 // 获取菜品名称
@@ -122,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkListStatus();
     }
 
+    /**
+     * 根据Preview是否为空来刷新UI
+     */
     private void checkListStatus() {
         if (dao.isPreviewNull()) {
             listView1.setVisibility(View.GONE);
@@ -129,21 +134,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             fragment.setVisibility(View.GONE);
             listView1.setVisibility(View.VISIBLE);
-            listView1.setAdapter(previewListviewAdapter);
         }
     }
 
     private void init() {
         totalNumber = findViewById(R.id.textView5);
         totalMoney = findViewById(R.id.textView8);
-        listView1 = findViewById(R.id.listview1);
         xiadan = findViewById(R.id.button2);
         fragment = findViewById(R.id.fragment);
         table = findViewById(R.id.button);
         table.setOnClickListener(this);
         dao = new Dao(this);
+
+        // 左下角ListView
+        listView1 = findViewById(R.id.listview1);
         previews = dao.queryPreview();
         previewListviewAdapter = new PreviewListviewAdapter(previews, this);
+        listView1.setAdapter(previewListviewAdapter);
 
         // 左上角ListView
         listView = findViewById(R.id.listview);
