@@ -124,9 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateMenuView(DishEnum witch) {
         List<Menu> menus = dao.createmenu(witch);
         gridAdapter.update(menus);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(gridAdapter);
+        gridAdapter.notifyDataSetChanged();
         checkListStatus();
     }
 
