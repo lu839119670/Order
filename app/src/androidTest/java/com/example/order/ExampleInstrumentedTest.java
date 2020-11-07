@@ -104,6 +104,13 @@ public class ExampleInstrumentedTest {
 
     }
     @Test
+    public void delete(){
+        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Dao dao=new Dao(appContext);
+        dao.deletePreview();
+
+    }
+    @Test
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
