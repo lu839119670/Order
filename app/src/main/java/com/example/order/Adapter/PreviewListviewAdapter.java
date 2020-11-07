@@ -20,13 +20,14 @@ public class PreviewListviewAdapter extends BaseAdapter {
     private Dao dao;
     private OnItemClickListener mOnItemClickListener;
 
-    public PreviewListviewAdapter(List<Preview> list,Context context){
-        this.list=list;
-        this.context=context;
+    public PreviewListviewAdapter(List<Preview> list, Context context) {
+        this.list = list;
+        this.context = context;
     }
+
     @Override
     public int getCount() {
-        if (list!=null){
+        if (list != null) {
             return list.size();
         }
         return 0;
@@ -34,7 +35,7 @@ public class PreviewListviewAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        if (list!=null){
+        if (list != null) {
             return list.get(i);
         }
         return null;
@@ -44,70 +45,75 @@ public class PreviewListviewAdapter extends BaseAdapter {
     public long getItemId(int i) {
         return i;
     }
-    public void setaOnItemClickListener(OnItemClickListener listener){
-        this.mOnItemClickListener= listener;
+
+    public void setaOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
     }
 
-    public interface OnItemClickListener{
-        void onItemClick( int i);
+    public interface OnItemClickListener {
+        void onItemClick(int i);
     }
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         final ViewHolder viewHolder;
-        if (view==null){
-            viewHolder=new ViewHolder();
-            view= LayoutInflater.from(context).inflate(R.layout.item_previewlstview, null);
-            viewHolder.name=view.findViewById(R.id.textView13);
-            viewHolder.spicy=view.findViewById(R.id.textView14);
-            viewHolder.weight=view.findViewById(R.id.textView15);
-            viewHolder.minus=view.findViewById(R.id.button4);
-            viewHolder.number=view.findViewById(R.id.textView16);
-            viewHolder.add=view.findViewById(R.id.button5);
-            viewHolder.totalmoney=view.findViewById(R.id.textView17);
+        if (view == null) {
+            viewHolder = new ViewHolder();
+            view = LayoutInflater.from(context).inflate(R.layout.item_previewlstview, null);
+            viewHolder.name = view.findViewById(R.id.textView13);
+            viewHolder.spicy = view.findViewById(R.id.textView14);
+            viewHolder.weight = view.findViewById(R.id.textView15);
+            viewHolder.minus = view.findViewById(R.id.button4);
+            viewHolder.number = view.findViewById(R.id.textView16);
+            viewHolder.add = view.findViewById(R.id.button5);
+            viewHolder.totalmoney = view.findViewById(R.id.textView17);
             view.setTag(viewHolder);
-        }else{
-            viewHolder= (ViewHolder) view.getTag();
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
         }
-            dao=new Dao(context);
-            viewHolder.name.setText(list.get(i).getName());
-            viewHolder.spicy.setText(list.get(i).getSpicy());
-            viewHolder.weight.setText(list.get(i).getWeight());
-            viewHolder.number.setText(list.get(i).getNumber()+"");
-            viewHolder.totalmoney.setText("￥ "+list.get(i).getMoney()+"");
-            viewHolder.add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        dao = new Dao(context);
+        viewHolder.name.setText(list.get(i).getName());
+        viewHolder.spicy.setText(list.get(i).getSpicy());
+        viewHolder.weight.setText(list.get(i).getWeight());
+        viewHolder.number.setText(list.get(i).getNumber() + "");
+        viewHolder.totalmoney.setText("￥ " + list.get(i).getMoney() + "");
+        viewHolder.add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                    dao.updatePreviewNumber(dao.getPreviewNumber(list.get(i).getName())+1,list.get(i).getName());
-                    viewHolder.number.setText(dao.getPreviewNumber(list.get(i).getName())+"");
+                dao.updatePreviewNumber(dao.getPreviewNumber(list.get(i).getName()) + 1, list.get(i).getName());
+                viewHolder.number.setText(dao.getPreviewNumber(list.get(i).getName()) + "");
 
 
-                    if (mOnItemClickListener!=null){
-                        mOnItemClickListener.onItemClick(i);
-                    }
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(i);
                 }
-            });
+            }
+        });
 
-            viewHolder.minus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (dao.getPreviewNumber(list.get(i).getName())>1){
-                    dao.updatePreviewNumber(dao.getPreviewNumber(list.get(i).getName())-1,list.get(i).getName());
-                    viewHolder.number.setText(dao.getPreviewNumber(list.get(i).getName())+"");
-                    }else{
-                        dao.deletePreviewItem(list.get(i).getName());
-                    }
+        viewHolder.minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.getPreviewNumber(list.get(i).getName()) > 1) {
+                    dao.updatePreviewNumber(
+                            dao.getPreviewNumber(list.get(i).getName()) - 1,
+                            list.get(i).getName()
+                    );
 
-                    if (mOnItemClickListener!=null){
-                        mOnItemClickListener.onItemClick(i);
-                    }
+                    viewHolder.number.setText(dao.getPreviewNumber(list.get(i).getName()) + "");
+                } else {
+                    dao.deletePreviewItem(list.get(i).getName());
                 }
-            });
 
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(i);
+                }
+            }
+        });
         return view;
     }
-    class ViewHolder{
+
+    class ViewHolder {
         TextView name;
         TextView spicy;
         TextView weight;
@@ -115,6 +121,5 @@ public class PreviewListviewAdapter extends BaseAdapter {
         TextView number;
         Button add;
         TextView totalmoney;
-
     }
 }

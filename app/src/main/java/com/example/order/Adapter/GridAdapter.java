@@ -22,9 +22,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     private List<Menu> list;
     private OnItemClickListener mOnItemClickListener;
 
-    public GridAdapter(List<Menu> list){
-        this.list=list;
+    public GridAdapter(List<Menu> list) {
+        this.list = list;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,24 +35,24 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setData(holder,position);
+        holder.setData(holder, position);
     }
 
     @Override
     public int getItemCount() {
-        if (list!=null){
+        if (list != null) {
             return list.size();
         }
         return 0;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
-            this.mOnItemClickListener= listener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
     }
 
 
-    public interface OnItemClickListener{
-        void onItemClick( int i);
+    public interface OnItemClickListener {
+        void onItemClick(int i);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -62,32 +63,39 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         private Button add;
         private Dao dao;
         private int position;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            name=itemView.findViewById(R.id.textView11);
-            number=itemView.findViewById(R.id.textView3);
-            money=itemView.findViewById(R.id.textView12);
-            img=itemView.findViewById(R.id.image);
-            add=itemView.findViewById(R.id.button3);
-            dao=new Dao(itemView.getContext());
+            name = itemView.findViewById(R.id.textView11);
+            number = itemView.findViewById(R.id.textView3);
+            money = itemView.findViewById(R.id.textView12);
+            img = itemView.findViewById(R.id.image);
+            add = itemView.findViewById(R.id.button3);
+            dao = new Dao(itemView.getContext());
 
 
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    if (dao.checkPreview(list.get(position).getName())){
-                        dao.updatePreviewNumber(dao.getPreviewNumber(list.get(position).getName())+1,list.get(position).getName());
-                    }else{
-                        dao.createPreview(list.get(position).getName(),list.get(position).getMoney(),list.get(position).getNumber(),list.get(position).getWeight(),list.get(position).getSpicy());
+                    if (dao.checkPreview(list.get(position).getName())) {
+                        dao.updatePreviewNumber(
+                                dao.getPreviewNumber(list.get(position).getName()) + 1,
+                                list.get(position).getName());
+                    } else {
+                        dao.createPreview(
+                                list.get(position).getName(),
+                                list.get(position).getMoney(),
+                                list.get(position).getNumber(),
+                                list.get(position).getWeight(),
+                                list.get(position).getSpicy());
                     }
 
-                    if (dao.getPreviewNumber(list.get(position).getName())>0){
-                        number.setText(dao.getPreviewNumber(list.get(position).getName())+"");
+                    if (dao.getPreviewNumber(list.get(position).getName()) > 0) {
+                        number.setText(dao.getPreviewNumber(list.get(position).getName()) + "");
                         number.getBackground().setAlpha(255);
                     }
 
-                    if (mOnItemClickListener!=null){
+                    if (mOnItemClickListener != null) {
                         mOnItemClickListener.onItemClick(position);
                     }
                 }
@@ -96,19 +104,18 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         }
 
         public void setData(ViewHolder holder, final int position) {
-            this.position=position;
+            this.position = position;
             img.setImageResource(list.get(position).getImage());
             name.setText(list.get(position).getName());
             String initNum = number.getText().toString();
-            if (dao.checkPreview(list.get(position).getName())){
-               number.setText(dao.getPreviewNumber(list.get(position).getName())+"");
-               number.getBackground().setAlpha(255);
-            }else{
+            if (dao.checkPreview(list.get(position).getName())) {
+                number.setText(dao.getPreviewNumber(list.get(position).getName()) + "");
+                number.getBackground().setAlpha(255);
+            } else {
                 number.setText("");
                 number.getBackground().setAlpha(0);
             }
-            money.setText(list.get(position).getMoney()+" /份");
-
+            money.setText(list.get(position).getMoney() + " /份");
 
 
         }
