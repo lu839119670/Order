@@ -50,6 +50,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         this.mOnItemClickListener = listener;
     }
 
+    public void update(List<Menu> list) {
+        this.list = list;
+    }
+
 
     public interface OnItemClickListener {
         void onItemClick(int i);
@@ -116,8 +120,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                 number.getBackground().setAlpha(0);
             }
             money.setText(list.get(position).getMoney() + " /份");
-
-
         }
     }
 }

@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.order.Bean.Menu;
 import com.example.order.Bean.Preview;
 import com.example.order.Dao.Dao;
 import com.example.order.R;
@@ -52,6 +53,10 @@ public class PreviewListviewAdapter extends BaseAdapter {
 
     public interface OnItemClickListener {
         void onItemClick(int i);
+    }
+
+    public void update(List<Preview> list) {
+        this.list = list;
     }
 
     @Override

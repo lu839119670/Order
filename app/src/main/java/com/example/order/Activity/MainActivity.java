@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<Preview> previews;
     private AlertDialog alertDialog;
     private List<Menu> createmenu;
-    public static int norNum =  1;
+    public static int norNum = 1;
     public static int nortab = 0;
     private PreviewListviewAdapter previewListviewAdapter;
 
@@ -63,13 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                createmenu = dao.createmenu(DISH_ARRAY[i]);
-                gridAdapter = new GridAdapter(createmenu);
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
-                recyclerView.setLayoutManager(gridLayoutManager);
-                recyclerView.setAdapter(gridAdapter);
-                recyclerView.invalidateItemDecorations();
-                recyclerView.invalidate();
+                updateMenuView(i);
             }
         });
 
@@ -77,14 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         previewListviewAdapter.setaOnItemClickListener(new PreviewListviewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int i) {
-                createmenu = dao.createmenu(DISH_ARRAY[i]);
-                gridAdapter = new GridAdapter(createmenu);
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
-                recyclerView.setLayoutManager(gridLayoutManager);
-                recyclerView.setAdapter(gridAdapter);
-                Toast.makeText(MainActivity.this, i + "a", Toast.LENGTH_SHORT).show();
-                recyclerView.invalidateItemDecorations();
-                recyclerView.invalidate();
+                updateMenuView(i);
             }
         });
 
@@ -92,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         gridAdapter.setOnItemClickListener(new GridAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int i) {
-                Toast.makeText(MainActivity.this, i + "a", Toast.LENGTH_SHORT).show();
+                // 点击之后刷新左下角的listview
                 fragment.setVisibility(View.GONE);
                 listView1.setVisibility(View.VISIBLE);
                 previews = dao.queryPreview();
@@ -100,6 +87,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 listView1.setAdapter(previewListviewAdapter);
             }
         });
+    }
+
+    /**
+     * 刷新右边主界面
+     *
+     * @param witch 需要哪个
+     */
+    private void updateMenuView(int witch) {
+        List<Menu> menus = dao.createmenu(DISH_ARRAY[witch]);
+        gridAdapter.update(menus);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(gridAdapter);
+        recyclerView.invalidateItemDecorations();
+        recyclerView.invalidate();
     }
 
     private void init() {
@@ -135,138 +137,141 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button:
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_table, null);
-                TextView cancle = v.findViewById(R.id.textView28);
-                final TextView oneTable = v.findViewById(R.id.textView19);
-                final TextView twoTable = v.findViewById(R.id.textView21);
-                final TextView threeTable = v.findViewById(R.id.textView23);
-                final TextView foutTable = v.findViewById(R.id.textView25);
-                Button minus = v.findViewById(R.id.button6);
-                final Button add = v.findViewById(R.id.button7);
-                final TextView number = v.findViewById(R.id.textView27);
-                Button choose = v.findViewById(R.id.button8);
-                final RelativeLayout table1 = v.findViewById(R.id.table1);
-                final RelativeLayout table2 = v.findViewById(R.id.table2);
-                final RelativeLayout table3 = v.findViewById(R.id.table3);
-                final RelativeLayout table4 = v.findViewById(R.id.table4);
-                number.setText(norNum+"");
-                if (dao.chechTable(1)){
-                    table1.setBackgroundResource(R.color.pink);
-                    oneTable.setText("有人");
-                } else {
-                    table1.setBackgroundResource(R.color.table);
-                    oneTable.setText("空闲");
-                }
-
-                if (dao.chechTable(2)) {
-                    table2.setBackgroundResource(R.color.pink);
-                    twoTable.setText("有人");
-                } else {
-                    table2.setBackgroundResource(R.color.table);
-                    twoTable.setText("空闲");
-                }
-                if (dao.chechTable(3)) {
-                    table3.setBackgroundResource(R.color.pink);
-                    threeTable.setText("有人");
-                } else {
-                    table3.setBackgroundResource(R.color.table);
-                    threeTable.setText("空闲");
-                }
-                if (dao.chechTable(4)) {
-                    table4.setBackgroundResource(R.color.pink);
-                    foutTable.setText("有人");
-                } else {
-                    table4.setBackgroundResource(R.color.table);
-                    foutTable.setText("空闲");
-                }
-
-                table1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (dao.chechTable(1)) {
-                            table1.setBackgroundResource(R.color.pink);
-                            oneTable.setText("有人");
-                        }else{
-                            table1.setBackgroundResource(R.color.orienge);
-                            nortab=1;
-                        }
-                    }
-                });
-                table2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (dao.chechTable(2)){
-                            table2.setBackgroundResource(R.color.pink);
-                            twoTable.setText("有人");
-                        }else{
-                            table2.setBackgroundResource(R.color.orienge);
-                            nortab=2;
-                        }
-                    }
-                });
-                table3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (dao.chechTable(3)){
-                            table3.setBackgroundResource(R.color.pink);
-                            threeTable.setText("有人");
-                        }else{
-                            table3.setBackgroundResource(R.color.orienge);
-                            nortab=3;
-                        }
-                    }
-                });
-                table4.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (dao.chechTable(4)){
-                            table4.setBackgroundResource(R.color.pink);
-                            foutTable.setText("有人");
-                        }else{
-                            table4.setBackgroundResource(R.color.orienge);
-                            nortab=4;
-                        }
-                    }
-                });
-
-                minus.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                       if (norNum>1){
-                           norNum--;
-                           number.setText(norNum+"");
-                       }
-
-                    }
-                });
-                add.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        norNum++;
-                        number.setText(norNum+"");
-                    }
-                });
-                choose.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        alertDialog.dismiss();
-                    }
-                });
-                cancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        alertDialog.dismiss();
-                    }
-                });
-                builder.setView(v);
-                alertDialog = builder.create();
-                alertDialog.show();
+                tableButtonClicked();
                 break;
             case R.id.button2:
                 break;
 
         }
+    }
+
+    private void tableButtonClicked() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_table, null);
+        TextView cancle = v.findViewById(R.id.textView28);
+        final TextView oneTable = v.findViewById(R.id.textView19);
+        final TextView twoTable = v.findViewById(R.id.textView21);
+        final TextView threeTable = v.findViewById(R.id.textView23);
+        final TextView foutTable = v.findViewById(R.id.textView25);
+        Button minus = v.findViewById(R.id.button6);
+        final Button add = v.findViewById(R.id.button7);
+        final TextView number = v.findViewById(R.id.textView27);
+        Button choose = v.findViewById(R.id.button8);
+        final RelativeLayout table1 = v.findViewById(R.id.table1);
+        final RelativeLayout table2 = v.findViewById(R.id.table2);
+        final RelativeLayout table3 = v.findViewById(R.id.table3);
+        final RelativeLayout table4 = v.findViewById(R.id.table4);
+        number.setText(norNum + "");
+        if (dao.chechTable(1)) {
+            table1.setBackgroundResource(R.color.pink);
+            oneTable.setText("有人");
+        } else {
+            table1.setBackgroundResource(R.color.table);
+            oneTable.setText("空闲");
+        }
+
+        if (dao.chechTable(2)) {
+            table2.setBackgroundResource(R.color.pink);
+            twoTable.setText("有人");
+        } else {
+            table2.setBackgroundResource(R.color.table);
+            twoTable.setText("空闲");
+        }
+        if (dao.chechTable(3)) {
+            table3.setBackgroundResource(R.color.pink);
+            threeTable.setText("有人");
+        } else {
+            table3.setBackgroundResource(R.color.table);
+            threeTable.setText("空闲");
+        }
+        if (dao.chechTable(4)) {
+            table4.setBackgroundResource(R.color.pink);
+            foutTable.setText("有人");
+        } else {
+            table4.setBackgroundResource(R.color.table);
+            foutTable.setText("空闲");
+        }
+
+        table1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.chechTable(1)) {
+                    table1.setBackgroundResource(R.color.pink);
+                    oneTable.setText("有人");
+                } else {
+                    table1.setBackgroundResource(R.color.orienge);
+                    nortab = 1;
+                }
+            }
+        });
+        table2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.chechTable(2)) {
+                    table2.setBackgroundResource(R.color.pink);
+                    twoTable.setText("有人");
+                } else {
+                    table2.setBackgroundResource(R.color.orienge);
+                    nortab = 2;
+                }
+            }
+        });
+        table3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.chechTable(3)) {
+                    table3.setBackgroundResource(R.color.pink);
+                    threeTable.setText("有人");
+                } else {
+                    table3.setBackgroundResource(R.color.orienge);
+                    nortab = 3;
+                }
+            }
+        });
+        table4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.chechTable(4)) {
+                    table4.setBackgroundResource(R.color.pink);
+                    foutTable.setText("有人");
+                } else {
+                    table4.setBackgroundResource(R.color.orienge);
+                    nortab = 4;
+                }
+            }
+        });
+
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (norNum > 1) {
+                    norNum--;
+                    number.setText(norNum + "");
+                }
+            }
+        });
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                norNum++;
+                number.setText(norNum + "");
+            }
+        });
+        choose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(v);
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override
