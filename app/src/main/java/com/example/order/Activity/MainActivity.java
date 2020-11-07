@@ -55,14 +55,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        if (dao.isPreviewNull()) {
-            listView1.setVisibility(View.GONE);
-            fragment.setVisibility(View.VISIBLE);
-        } else {
-            fragment.setVisibility(View.GONE);
-            listView1.setVisibility(View.VISIBLE);
-            listView1.setAdapter(previewListviewAdapter);
-        }
+        checkListStatus();
+        setTotalNumber();
+        setTotalMoney();
 
         // 左上角ListView的监听
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,10 +72,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemClick(int i, DishEnum dish) {
                 updateMenuView(dish);
+                setTotalNumber();
+                setTotalMoney();
 
                 // 通过寻找物品在菜单中的位置来进行跳转
+                List<Preview> previews = dao.queryPreview();
+                if (previews.size() <= i) return;
                 // 获取菜品名称
-                String name = dao.queryPreview().get(i).getName();
+                String name = previews.get(i).getName();
                 // 获取此菜单内容数量
                 List<Menu> menus = dao.createmenu(dish);
                 // 遍历对比，对上就进行跳转
@@ -90,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         recyclerView.scrollToPosition(j);
                     }
                 }
-                setTotalNumber();
-                setTotalMoney();
             }
         });
 
@@ -122,11 +119,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(gridAdapter);
+        checkListStatus();
+    }
+
+    private void checkListStatus() {
+        if (dao.isPreviewNull()) {
+            listView1.setVisibility(View.GONE);
+            fragment.setVisibility(View.VISIBLE);
+        } else {
+            fragment.setVisibility(View.GONE);
+            listView1.setVisibility(View.VISIBLE);
+            listView1.setAdapter(previewListviewAdapter);
+        }
     }
 
     private void init() {
-        totalNumber=findViewById(R.id.textView5);
-        totalMoney= findViewById(R.id.textView8);
+        totalNumber = findViewById(R.id.textView5);
+        totalMoney = findViewById(R.id.textView8);
         listView1 = findViewById(R.id.listview1);
         xiadan = findViewById(R.id.button2);
         fragment = findViewById(R.id.fragment);
@@ -296,29 +305,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alertDialog.show();
     }
 
-    public void setTotalNumber(){
+    public void setTotalNumber() {
         List<Preview> que = dao.queryPreview();
-        int num=0;
-        if (que!=null){
-            for (int i=0;i<que.size();i++){
-               num+=que.get(i).getNumber();
+        int num = 0;
+        if (que != null) {
+            for (Preview preview : que) {
+                num += preview.getNumber();
             }
-            totalNumber.setText(num+"");
+            totalNumber.setText(num + "");
         }
     }
 
-    public void setTotalMoney(){
+    public void setTotalMoney() {
         List<Preview> que = dao.queryPreview();
-        int num=0;
-        double money=0;
-        double totalmoneies=0;
-        if (que!=null){
-            for (int i=0;i<que.size();i++){
-                num=que.get(i).getNumber();
-                money=que.get(i).getMoney();
-                totalmoneies += num*money;
+        int num = 0;
+        double money = 0;
+        double totalmoneies = 0;
+        if (que != null) {
+            for (Preview preview : que) {
+                num = preview.getNumber();
+                money = preview.getMoney();
+                totalmoneies += num * money;
             }
-            totalMoney.setText("￥ "+totalmoneies+"");
+            totalMoney.setText("￥ " + totalmoneies + "");
         }
     }
 

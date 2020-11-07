@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.order.Bean.DishEnum;
-import com.example.order.Bean.Menu;
 import com.example.order.Bean.Preview;
 import com.example.order.Dao.Dao;
 import com.example.order.R;
@@ -83,22 +81,26 @@ public class PreviewListviewAdapter extends BaseAdapter {
         viewHolder.weight.setText(list.get(i).getWeight());
         viewHolder.number.setText(list.get(i).getNumber() + "");
         viewHolder.totalmoney.setText("￥ " + list.get(i).getMoney() + "");
+
+        // 添加
         viewHolder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                dao.updatePreviewNumber(dao.getPreviewNumber(list.get(i).getName()) + 1, list.get(i).getName());
+                dao.updatePreviewNumber(
+                        dao.getPreviewNumber(list.get(i).getName()) + 1,
+                        list.get(i).getName());
                 viewHolder.number.setText(dao.getPreviewNumber(list.get(i).getName()) + "");
-
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClick(i, DishEnum.pauseToDishEnum(dao.getCategory(list.get(i).getName())));
                 }
             }
         });
 
+        // 删除
         viewHolder.minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Preview cache = list.get(i);
                 if (dao.getPreviewNumber(list.get(i).getName()) > 1) {
                     dao.updatePreviewNumber(
                             dao.getPreviewNumber(list.get(i).getName()) - 1,
@@ -108,10 +110,11 @@ public class PreviewListviewAdapter extends BaseAdapter {
                     viewHolder.number.setText(dao.getPreviewNumber(list.get(i).getName()) + "");
                 } else {
                     dao.deletePreviewItem(list.get(i).getName());
+                    list.remove(i);
                 }
 
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(i, DishEnum.pauseToDishEnum(dao.getCategory(list.get(i).getName())));
+                    mOnItemClickListener.onItemClick(i, DishEnum.pauseToDishEnum(dao.getCategory(cache.getName())));
                 }
             }
         });
