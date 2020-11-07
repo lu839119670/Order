@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }else{
 
                             if (nortab==0){
-
+                                oneTable.setText("asd");
                             }
                         }
                     }
