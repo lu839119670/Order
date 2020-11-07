@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // 点击之后刷新左下角的listview
                 fragment.setVisibility(View.GONE);
                 listView1.setVisibility(View.VISIBLE);
-                previews = dao.queryPreview();
-                previewListviewAdapter = new PreviewListviewAdapter(previews, MainActivity.this);
+                List<Preview> previews = dao.queryPreview();
+                previewListviewAdapter.update(previews);
                 listView1.setAdapter(previewListviewAdapter);
             }
         });
