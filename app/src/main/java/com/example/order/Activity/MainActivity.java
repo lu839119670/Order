@@ -24,8 +24,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // 左上角
     private ListView listView;
-    // 左上角菜单类别
-    private List<String> category;
     // 左上角listview的监听器
     private ListViewAdapter listViewAdapter;
     private LinearLayout fragment;
@@ -35,9 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Dao dao;
     private GridAdapter gridAdapter;
     private ListView listView1;
-    private List<Preview> previews;
     private AlertDialog alertDialog;
-    private List<Menu> createmenu;
     public static int norNum = 1;
     public static int nortab = 0;
     private TextView totalNumber;
@@ -152,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // 左下角ListView
         listView1 = findViewById(R.id.listview1);
-        previews = dao.queryPreview();
+        List<Preview> previews = dao.queryPreview();
         previewListviewAdapter = new PreviewListviewAdapter(previews, this);
         listView1.setAdapter(previewListviewAdapter);
 
         // 左上角ListView
         listView = findViewById(R.id.listview);
-        category = new ArrayList<>();
+        List<String> category = new ArrayList<>();
         for (DishEnum dishEnum : DISH_ARRAY) {
             category.add(dishEnum.getName());
         }
@@ -167,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // 右边菜单RecycleView
         recyclerView = findViewById(R.id.recyclerview);
-        createmenu = dao.createmenu(DishEnum.ENTREE);
+        List<Menu> createmenu = dao.createmenu(DishEnum.ENTREE);
         gridAdapter = new GridAdapter(createmenu);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -183,7 +179,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button2:
                 break;
-
+            default:
+                break;
         }
     }
 
@@ -210,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tableRelativeLayout[3] = v.findViewById(R.id.table4);
         number.setText(norNum + "");
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < tableTextView.length; i++) {
             final boolean t = dao.chechTable(i + 1);
             tableRelativeLayout[i].setBackgroundResource(t ? R.color.pink : R.color.table);
             tableTextView[i].setText(t ? "有人" : "空闲");
@@ -220,9 +217,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
                     boolean t1 = dao.chechTable(finalI + 1);
-                    tableRelativeLayout[finalI].setBackgroundResource(t1 ? R.color.pink : R.color.orienge);
+                    tableRelativeLayout[finalI].setBackgroundResource(t1 ? R.color.pink : R.color.table);
                     tableTextView[finalI].setText(t1 ? "有人" : "空闲");
-                    System.out.println(t1);
                     nortab = finalI + 1;
                 }
             });
@@ -353,8 +349,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void setTotalMoney() {
         List<Preview> que = dao.queryPreview();
-        int num = 0;
-        double money = 0;
+        int num;
+        double money;
         double totalmoneies = 0;
         if (que != null) {
             for (Preview preview : que) {

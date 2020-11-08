@@ -92,7 +92,7 @@ public class PreviewListviewAdapter extends BaseAdapter {
                 list = dao.queryPreview();
                 notifyDataSetChanged();
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(i, DishEnum.pauseToDishEnum(dao.getCategory(list.get(i).getName())));
+                    mOnItemClickListener.onItemClick(i, dao.getCategory(list.get(i).getName()));
                 }
             }
         });
@@ -113,7 +113,7 @@ public class PreviewListviewAdapter extends BaseAdapter {
                 list = dao.queryPreview();
                 notifyDataSetChanged();
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(i, DishEnum.pauseToDishEnum(dao.getCategory(cache.getName())));
+                    mOnItemClickListener.onItemClick(i, dao.getCategory(cache.getName()));
                 }
             }
         });

@@ -3,12 +3,10 @@ package com.example.order.Dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.example.order.Bean.DishEnum;
 import com.example.order.Bean.Menu;
 import com.example.order.Bean.Preview;
 
-import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +82,7 @@ public class Dao {
         db.close();
         return list;
     }
-    
+
     public int getPreviewNumber(String name) {
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
         String sql = "select number from preview where name = ?";
@@ -160,15 +158,15 @@ public class Dao {
      * @param name 菜品名称
      * @return 菜品种类
      */
-    public String getCategory(String name) {
+    public DishEnum getCategory(String name) {
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
         String sql = "select category from menu where name = ?";
         Cursor cursor = db.rawQuery(sql, new String[]{name});
         if (cursor.moveToNext()) {
-            return cursor.getString(0);
+            return DishEnum.pauseToDishEnum(cursor.getString(0));
         }
         cursor.close();
         db.close();
-        return "";
+        return null;
     }
 }
