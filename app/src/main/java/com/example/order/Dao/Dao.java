@@ -4,8 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.example.order.Bean.DishEnum;
+import com.example.order.Bean.Manager;
 import com.example.order.Bean.Menu;
 import com.example.order.Bean.Preview;
+import com.example.order.Bean.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,8 @@ public class Dao {
         db.close();
         return list;
     }
+
+
 
     public void createPreview(String name, double money, int number, String weight, String spicy) {
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
@@ -168,5 +172,87 @@ public class Dao {
         cursor.close();
         db.close();
         return null;
+    }
+
+    public void createMtable(int tabNum,int perNum,String name,double money,int number,String weight,String spicy){
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        String sql="insert into mtable values(?,?,?,?,?,?,?)";
+        db.execSQL(sql,new Object[]{tabNum,perNum,name,money,number,weight,spicy});
+        db.close();
+    }
+
+    public Boolean login(String user,String password){
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        String sql="select * from staff where user = ? and password = ?";
+        Cursor cursor = db.rawQuery(sql, new String[]{user, password});
+        if (cursor.moveToNext()){
+            return true;
+        }
+        cursor.close();
+        db.close();
+        return false;
+    }
+
+    public List<Table> queryTableByTable(int tabNum){
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        List<Table>list=new ArrayList<>();
+        String sql="select * from mtable where tablenum = ?";
+        Table table;
+        Cursor cursor = db.rawQuery(sql, new String[]{tabNum+""});
+        while (cursor.moveToNext()){
+            int tableNum = cursor.getInt(0);
+            int perNum = cursor.getInt(1);
+            String name = cursor.getString(2);
+            double money = cursor.getDouble(3);
+            int number = cursor.getInt(4);
+            String weight = cursor.getString(5);
+            String spicy = cursor.getString(6);
+            table=new Table(tableNum,perNum,name,money,number,weight,spicy);
+            list.add(table);
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+    public void deleteTable(int tabNum){
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        String sql="delete from mtable where tablenum = ?";
+        db.execSQL(sql,new Object[]{tabNum});
+        db.close();
+    }
+
+    public void createManager(String user,String password,String name,String sex,String position,String phone){
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        String sql="insert into staff values(?,?,?,?,?,?)";
+        db.execSQL(sql,new Object[]{user,password,name,sex,position,phone});
+        db.close();
+    }
+
+    public List<Manager> queryManager(){
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        List<Manager>list=new ArrayList<>();
+        Manager manager;
+        String sql="select * from staff";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()){
+            String user = cursor.getString(0);
+            String password = cursor.getString(1);
+            String name = cursor.getString(2);
+            String sex = cursor.getString(3);
+            String position = cursor.getString(4);
+            String phone = cursor.getString(5);
+            manager=new Manager(user,password,name,sex,position,phone);
+            list.add(manager);
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+    public void deleteManager(String user){
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        String sql="delete from staff where user = ?";
+        db.execSQL(sql,new Object[]{user});
+        db.close();
     }
 }

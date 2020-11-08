@@ -1,6 +1,7 @@
 package com.example.order.Bean;
 
 public class Menu {
+    private String category1;
     private DishEnum category;
     private String name;
     private double money;
@@ -27,6 +28,14 @@ public class Menu {
     }
 
     public Menu() {
+    }
+
+    public String getCategory1() {
+        return category1;
+    }
+
+    public void setCategory1(String category1) {
+        this.category1 = category1;
     }
 
     public DishEnum getCategory() {

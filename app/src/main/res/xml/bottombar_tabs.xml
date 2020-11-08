@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs xmlns:android="http://schemas.android.com/apk/res/android">
+    <tab
+        id="@+id/cost"
+        icon="@drawable/ic_attach_money_black_24dp"
+        title="收银"
+        barColorWhenSelected="#F27780" />
+    <tab
+        id="@+id/manager"
+        icon="@drawable/ic_person_black_24dp"
+        title="管理员"
+        barColorWhenSelected="#409fff" />
+
+</tabs>

@@ -1,6 +1,7 @@
 package com.example.order.Activity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // 左上角
     private ListView listView;
+    // 左上角菜单类别
+    private List<String> category;
     // 左上角listview的监听器
     private ListViewAdapter listViewAdapter;
     private LinearLayout fragment;
@@ -33,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Dao dao;
     private GridAdapter gridAdapter;
     private ListView listView1;
+    private List<Preview> previews;
     private AlertDialog alertDialog;
+    private List<Menu> createmenu;
     public static int norNum = 1;
     public static int nortab = 0;
     private TextView totalNumber;
@@ -84,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (int j = 0; j < menus.size(); j++) {
                     if (name.equals(menus.get(j).getName())) {
                         // 跳转，参数是adapter中内容的位置，而不是像素
-                        recyclerView.smoothScrollToPosition(j);
+                        recyclerView.scrollToPosition(j);
                     }
                 }
             }
@@ -144,17 +149,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragment = findViewById(R.id.fragment);
         table = findViewById(R.id.button);
         table.setOnClickListener(this);
+        xiadan.setOnClickListener(this);
         dao = new Dao(this);
 
         // 左下角ListView
         listView1 = findViewById(R.id.listview1);
-        List<Preview> previews = dao.queryPreview();
+        previews = dao.queryPreview();
         previewListviewAdapter = new PreviewListviewAdapter(previews, this);
         listView1.setAdapter(previewListviewAdapter);
 
         // 左上角ListView
         listView = findViewById(R.id.listview);
-        List<String> category = new ArrayList<>();
+        category = new ArrayList<>();
         for (DishEnum dishEnum : DISH_ARRAY) {
             category.add(dishEnum.getName());
         }
@@ -163,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // 右边菜单RecycleView
         recyclerView = findViewById(R.id.recyclerview);
-        List<Menu> createmenu = dao.createmenu(DishEnum.ENTREE);
+        createmenu = dao.createmenu(DishEnum.ENTREE);
         gridAdapter = new GridAdapter(createmenu);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -175,133 +181,193 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button:
-                tableButtonClicked();
+                if (dao.queryPreview().size()==0){
+                    Toast.makeText(this,"请先选择菜哦！",Toast.LENGTH_SHORT).show();
+                }else{
+                    tableButtonClicked();
+                }
                 break;
             case R.id.button2:
+               if (nortab>0){
+                    List<Preview> mtbale = dao.queryPreview();
+                    for (int i=0;i<mtbale.size();i++){
+                        dao.createMtable(nortab,norNum,mtbale.get(i).getName(),mtbale.get(i).getMoney(),mtbale.get(i).getNumber(),mtbale.get(i).getWeight(),mtbale.get(i).getSpicy());
+                    }
+                     managerLogin();
+                }else{
+                    Toast.makeText(this,"请先选择哪号桌！",Toast.LENGTH_SHORT).show();
+
+                }
+
+
                 break;
-            default:
-                break;
+
         }
+    }
+
+    private void managerLogin() {
+        final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_login, null);
+        final EditText user = v.findViewById(R.id.editText);
+        final EditText password = v.findViewById(R.id.editText2);
+        Button login = v.findViewById(R.id.button9);
+        Button cancleLogin = v.findViewById(R.id.button10);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean isLogin = dao.login(user.getText().toString(), password.getText().toString());
+                if (isLogin){
+                    startActivity(new Intent(MainActivity.this,ManageActivity.class));
+                }else {
+                    Toast.makeText(MainActivity.this,"输入的账户或密码有误",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        cancleLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+
+        builder.setView(v);
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void tableButtonClicked() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_table, null);
         TextView cancle = v.findViewById(R.id.textView28);
-
-        final TextView[] tableTextView = new TextView[4];
-        tableTextView[0] = v.findViewById(R.id.textView19);
-        tableTextView[1] = v.findViewById(R.id.textView21);
-        tableTextView[2] = v.findViewById(R.id.textView23);
-        tableTextView[3] = v.findViewById(R.id.textView25);
-
+        final TextView oneTable = v.findViewById(R.id.textView19);
+        final TextView twoTable = v.findViewById(R.id.textView21);
+        final TextView threeTable = v.findViewById(R.id.textView23);
+        final TextView foutTable = v.findViewById(R.id.textView25);
         Button minus = v.findViewById(R.id.button6);
-        Button add = v.findViewById(R.id.button7);
+        final Button add = v.findViewById(R.id.button7);
         final TextView number = v.findViewById(R.id.textView27);
         Button choose = v.findViewById(R.id.button8);
-
-        final RelativeLayout[] tableRelativeLayout = new RelativeLayout[4];
-        tableRelativeLayout[0] = v.findViewById(R.id.table1);
-        tableRelativeLayout[1] = v.findViewById(R.id.table2);
-        tableRelativeLayout[2] = v.findViewById(R.id.table3);
-        tableRelativeLayout[3] = v.findViewById(R.id.table4);
+        final RelativeLayout table1 = v.findViewById(R.id.table1);
+        final RelativeLayout table2 = v.findViewById(R.id.table2);
+        final RelativeLayout table3 = v.findViewById(R.id.table3);
+        final RelativeLayout table4 = v.findViewById(R.id.table4);
         number.setText(norNum + "");
-
-        for (int i = 0; i < tableTextView.length; i++) {
-            final boolean t = dao.chechTable(i + 1);
-            tableRelativeLayout[i].setBackgroundResource(t ? R.color.pink : R.color.table);
-            tableTextView[i].setText(t ? "有人" : "空闲");
-
-            final int finalI = i;
-            tableRelativeLayout[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    boolean t1 = dao.chechTable(finalI + 1);
-                    tableRelativeLayout[finalI].setBackgroundResource(t1 ? R.color.pink : R.color.table);
-                    tableTextView[finalI].setText(t1 ? "有人" : "空闲");
-                    nortab = finalI + 1;
-                }
-            });
+        if (dao.chechTable(1)) {
+            table1.setBackgroundResource(R.color.pink);
+            oneTable.setText("有人");
+        } else {
+            table1.setBackgroundResource(R.color.table);
+            oneTable.setText("空闲");
         }
 
-//        if (dao.chechTable(1)) {
-//            table1.setBackgroundResource(R.color.pink);
-//            oneTable.setText("有人");
-//        } else {
-//            table1.setBackgroundResource(R.color.table);
-//            oneTable.setText("空闲");
-//        }
-//
-//        if (dao.chechTable(2)) {
-//            table2.setBackgroundResource(R.color.pink);
-//            twoTable.setText("有人");
-//        } else {
-//            table2.setBackgroundResource(R.color.table);
-//            twoTable.setText("空闲");
-//        }
-//        if (dao.chechTable(3)) {
-//            table3.setBackgroundResource(R.color.pink);
-//            threeTable.setText("有人");
-//        } else {
-//            table3.setBackgroundResource(R.color.table);
-//            threeTable.setText("空闲");
-//        }
-//        if (dao.chechTable(4)) {
-//            table4.setBackgroundResource(R.color.pink);
-//            foutTable.setText("有人");
-//        } else {
-//            table4.setBackgroundResource(R.color.table);
-//            foutTable.setText("空闲");
-//        }
-//
-//        table1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (dao.chechTable(1)) {
-//                    table1.setBackgroundResource(R.color.pink);
-//                    oneTable.setText("有人");
-//                } else {
-//                    table1.setBackgroundResource(R.color.orienge);
-//                    nortab = 1;
-//                }
-//            }
-//        });
-//        table2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (dao.chechTable(2)) {
-//                    table2.setBackgroundResource(R.color.pink);
-//                    twoTable.setText("有人");
-//                } else {
-//                    table2.setBackgroundResource(R.color.orienge);
-//                    nortab = 2;
-//                }
-//            }
-//        });
-//        table3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (dao.chechTable(3)) {
-//                    table3.setBackgroundResource(R.color.pink);
-//                    threeTable.setText("有人");
-//                } else {
-//                    table3.setBackgroundResource(R.color.orienge);
-//                    nortab = 3;
-//                }
-//            }
-//        });
-//        table4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (dao.chechTable(4)) {
-//                    table4.setBackgroundResource(R.color.pink);
-//                    foutTable.setText("有人");
-//                } else {
-//                    table4.setBackgroundResource(R.color.orienge);
-//                    nortab = 4;
-//                }
-//            }
-//        });
+        if (dao.chechTable(2)) {
+            table2.setBackgroundResource(R.color.pink);
+            twoTable.setText("有人");
+        } else {
+            table2.setBackgroundResource(R.color.table);
+            twoTable.setText("空闲");
+        }
+        if (dao.chechTable(3)) {
+            table3.setBackgroundResource(R.color.pink);
+            threeTable.setText("有人");
+        } else {
+            table3.setBackgroundResource(R.color.table);
+            threeTable.setText("空闲");
+        }
+        if (dao.chechTable(4)) {
+            table4.setBackgroundResource(R.color.pink);
+            foutTable.setText("有人");
+        } else {
+            table4.setBackgroundResource(R.color.table);
+            foutTable.setText("空闲");
+        }
+
+        table1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.chechTable(1)) {
+                    table1.setBackgroundResource(R.color.pink);
+                    oneTable.setText("有人");
+                } else {
+                    table1.setBackgroundResource(R.color.orienge);
+                    nortab = 1;
+                    if (!dao.chechTable(2)){
+                        table2.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(3)){
+                        table3.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(4)){
+                        table4.setBackgroundResource(R.color.norman);
+                    }
+
+                }
+            }
+        });
+        table2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.chechTable(2)) {
+                    table2.setBackgroundResource(R.color.pink);
+                    twoTable.setText("有人");
+                } else {
+                    table2.setBackgroundResource(R.color.orienge);
+                    nortab = 2;
+                    if (!dao.chechTable(1)){
+                        table1.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(3)){
+                        table3.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(4)){
+                        table4.setBackgroundResource(R.color.norman);
+                    }
+                }
+            }
+        });
+        table3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.chechTable(3)) {
+                    table3.setBackgroundResource(R.color.pink);
+                    threeTable.setText("有人");
+                } else {
+                    table3.setBackgroundResource(R.color.orienge);
+                    nortab = 3;
+                    if (!dao.chechTable(1)){
+                        table1.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(2)){
+                        table2.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(4)){
+                        table4.setBackgroundResource(R.color.norman);
+                    }
+                }
+            }
+        });
+        table4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dao.chechTable(4)) {
+                    table4.setBackgroundResource(R.color.pink);
+                    foutTable.setText("有人");
+                } else {
+                    table4.setBackgroundResource(R.color.orienge);
+                    nortab = 4;
+                    if (!dao.chechTable(1)){
+                        table1.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(2)){
+                        table2.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(3)){
+                        table3.setBackgroundResource(R.color.norman);
+                    }
+                }
+            }
+        });
 
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,8 +415,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void setTotalMoney() {
         List<Preview> que = dao.queryPreview();
-        int num;
-        double money;
+        int num = 0;
+        double money = 0;
         double totalmoneies = 0;
         if (que != null) {
             for (Preview preview : que) {
@@ -366,6 +432,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         dao.deletePreview();
+
+
     }
 
     @Override
