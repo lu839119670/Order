@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:id="@+id/button12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/managerbutton"
+        android:textColor="#fff"
+        android:text="添加"
+        android:layout_toEndOf="@id/box"
+
+        android:layout_above="@id/box"/>
+
+    <RelativeLayout
+        android:id="@+id/box"
+        android:layout_width="849dp"
+        android:layout_height="408dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/managerlistview" >
+
+        <TextView
+            android:id="@+id/textView49"
+            android:layout_width="50dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/lightblack"
+            android:text="序号"
+            />
+
+        <TextView
+            android:id="@+id/textView50"
+            android:layout_toRightOf="@id/textView49"
+            android:textColor="@color/lightblack"
+            android:layout_width="80dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:text="工号" />
+
+        <TextView
+            android:id="@+id/textView51"
+            android:layout_width="150dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/textView50"
+            android:textColor="@color/lightblack"
+            android:layout_marginTop="10dp"
+            android:text="密码" />
+
+        <TextView
+            android:id="@+id/textView52"
+            android:layout_width="80dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/textView51"
+            android:textColor="@color/lightblack"
+            android:layout_marginTop="10dp"
+            android:text="姓名" />
+
+        <TextView
+            android:id="@+id/textView53"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/textView52"
+            android:textColor="@color/lightblack"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:text="性别" />
+
+        <TextView
+            android:id="@+id/textView54"
+            android:layout_width="80dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/textView53"
+            android:textColor="@color/lightblack"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:text="职位" />
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="200dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightblack"
+            android:layout_toRightOf="@id/textView54"
+            android:layout_marginTop="10dp"
+
+            android:text="手机号码" />
+
+        <ListView
+            android:id="@+id/managerListview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/textView54"/>
+    </RelativeLayout>
+</RelativeLayout>

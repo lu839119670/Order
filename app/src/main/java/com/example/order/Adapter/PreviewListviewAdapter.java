@@ -110,7 +110,7 @@ public class PreviewListviewAdapter extends BaseAdapter {
                     viewHolder.number.setText(dao.getPreviewNumber(list.get(i).getName()) + "");
                 } else {
                     dao.deletePreviewItem(list.get(i).getName());
-                    list = dao.queryPreview();
+                    list.remove(i);
                     notifyDataSetChanged();
                 }
 

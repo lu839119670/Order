@@ -19,6 +19,12 @@ public class Table {
         this.spicy = spicy;
     }
 
+    public Table(String name, double money, int number) {
+        this.name = name;
+        this.money = money;
+        this.number = number;
+    }
+
     public int getTablenum() {
         return tablenum;
     }

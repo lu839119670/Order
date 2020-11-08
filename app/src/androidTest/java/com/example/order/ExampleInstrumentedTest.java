@@ -111,6 +111,13 @@ public class ExampleInstrumentedTest {
 
     }
     @Test
+    public void createManager(){
+        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Dao dao=new Dao(appContext);
+        dao.createManager("lyh","123456","陆宇豪","男","经理","13862682769");
+
+    }
+    @Test
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();

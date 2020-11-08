@@ -1,6 +1,7 @@
 package com.example.order.Activity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,15 +98,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 右边RecycleView监听
         gridAdapter.setOnItemClickListener(new GridAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int i) {
+            public void onItemClick(Menu menu) {
                 // 点击之后刷新左下角的listview
                 fragment.setVisibility(View.GONE);
                 listView1.setVisibility(View.VISIBLE);
                 List<Preview> previews = dao.queryPreview();
                 previewListviewAdapter.update(previews);
-                listView1.setAdapter(previewListviewAdapter);
+                previewListviewAdapter.notifyDataSetChanged();
                 setTotalNumber();
                 setTotalMoney();
+
+                for (int i = 0; i < previews.size(); i++) {
+                    if (menu.getName().equals(previews.get(i).getName())) {
+                        listView1.smoothScrollToPosition(i);
+                    }
+                }
             }
         });
     }
@@ -118,9 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateMenuView(DishEnum witch) {
         List<Menu> menus = dao.createmenu(witch);
         gridAdapter.update(menus);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(gridAdapter);
+        gridAdapter.notifyDataSetChanged();
         checkListStatus();
     }
 
@@ -144,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragment = findViewById(R.id.fragment);
         table = findViewById(R.id.button);
         table.setOnClickListener(this);
+        xiadan.setOnClickListener(this);
         dao = new Dao(this);
 
         // 左下角ListView
@@ -175,12 +181,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button:
-                tableButtonClicked();
+                if (dao.queryPreview().size()==0){
+                    Toast.makeText(this,"请先选择菜哦！",Toast.LENGTH_SHORT).show();
+                }else{
+                    tableButtonClicked();
+                }
                 break;
             case R.id.button2:
+               if (nortab>0){
+                    List<Preview> mtbale = dao.queryPreview();
+                    for (int i=0;i<mtbale.size();i++){
+                        dao.createMtable(nortab,norNum,mtbale.get(i).getName(),mtbale.get(i).getMoney(),mtbale.get(i).getNumber(),mtbale.get(i).getWeight(),mtbale.get(i).getSpicy());
+                    }
+                     managerLogin();
+                }else{
+                    Toast.makeText(this,"请先选择哪号桌！",Toast.LENGTH_SHORT).show();
+
+                }
+
+
                 break;
 
         }
+    }
+
+    private void managerLogin() {
+        final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_login, null);
+        final EditText user = v.findViewById(R.id.editText);
+        final EditText password = v.findViewById(R.id.editText2);
+        Button login = v.findViewById(R.id.button9);
+        Button cancleLogin = v.findViewById(R.id.button10);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean isLogin = dao.login(user.getText().toString(), password.getText().toString());
+                if (isLogin){
+                    startActivity(new Intent(MainActivity.this,ManageActivity.class));
+                }else {
+                    Toast.makeText(MainActivity.this,"输入的账户或密码有误",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        cancleLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+
+        builder.setView(v);
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void tableButtonClicked() {
@@ -239,6 +292,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     table1.setBackgroundResource(R.color.orienge);
                     nortab = 1;
+                    if (!dao.chechTable(2)){
+                        table2.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(3)){
+                        table3.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(4)){
+                        table4.setBackgroundResource(R.color.norman);
+                    }
+
                 }
             }
         });
@@ -251,6 +314,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     table2.setBackgroundResource(R.color.orienge);
                     nortab = 2;
+                    if (!dao.chechTable(1)){
+                        table1.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(3)){
+                        table3.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(4)){
+                        table4.setBackgroundResource(R.color.norman);
+                    }
                 }
             }
         });
@@ -263,6 +335,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     table3.setBackgroundResource(R.color.orienge);
                     nortab = 3;
+                    if (!dao.chechTable(1)){
+                        table1.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(2)){
+                        table2.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(4)){
+                        table4.setBackgroundResource(R.color.norman);
+                    }
                 }
             }
         });
@@ -275,6 +356,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     table4.setBackgroundResource(R.color.orienge);
                     nortab = 4;
+                    if (!dao.chechTable(1)){
+                        table1.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(2)){
+                        table2.setBackgroundResource(R.color.norman);
+                    }
+                    if (!dao.chechTable(3)){
+                        table3.setBackgroundResource(R.color.norman);
+                    }
                 }
             }
         });
@@ -342,6 +432,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         dao.deletePreview();
+
+
     }
 
     @Override

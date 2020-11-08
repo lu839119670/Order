@@ -31,9 +31,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2.0"
-            android:orientation="vertical"
-            >
+            android:layout_weight="1.9"
+            android:orientation="vertical">
 
             <ListView
                 android:id="@+id/listview"
@@ -69,32 +68,30 @@
                     android:layout_height="230dp"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    >
+                    android:visibility="gone">
+
                     <ImageView
                         android:id="@+id/imageView"
                         android:layout_width="449dp"
                         android:layout_height="111dp"
                         android:layout_gravity="center"
-                        app:srcCompat="@drawable/kangna"
-                        />
+                        app:srcCompat="@drawable/kangna" />
 
                     <TextView
                         android:id="@+id/textView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="空订单不能下单，去添加一些菜品吧"
                         android:layout_gravity="center"
-                        android:textSize="12dp"
-                        />
+                        android:text="空订单不能下单，去添加一些菜品吧"
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/textView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="快去点些好吃的菜吧"
                         android:layout_gravity="center"
-                        android:textColor="@color/pink"/>
+                        android:text="快去点些好吃的菜吧"
+                        android:textColor="@color/pink" />
                 </LinearLayout>
 
                 <ListView
@@ -104,8 +101,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:background="#fff"
-                    android:layout_height="10dp">
+                    android:layout_height="10dp"
+                    android:background="#fff">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -166,8 +163,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#ffff"
-                    android:layout_marginTop="7dp">
+                    android:layout_marginTop="7dp"
+                    android:background="#ffff">
 
                     <Button
                         android:id="@+id/button"
@@ -200,7 +197,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="5dp"/>
 
     </LinearLayout>
 
