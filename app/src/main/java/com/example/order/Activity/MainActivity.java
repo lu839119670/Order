@@ -192,6 +192,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     gridAdapter.update(dao.createmenu(DishEnum.ENTREE));
                     previewListviewAdapter.update(new ArrayList<Preview>());
                     checkListStatus();
+                    nortab=0;
+                    totalNumber.setText("0");
+                    totalMoney.setText("0");
                 } else {
                     Toast.makeText(this, "请先选择哪号桌！", Toast.LENGTH_SHORT).show();
 
