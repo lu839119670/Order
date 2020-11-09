@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int nortab = 0;
     private TextView totalNumber;
     private TextView totalMoney;
+    private ImageView exchange;
     private PreviewListviewAdapter previewListviewAdapter;
 
     /**
@@ -142,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         xiadan = findViewById(R.id.button2);
         fragment = findViewById(R.id.fragment);
         table = findViewById(R.id.button);
+        exchange=findViewById(R.id.exchange);
+        exchange.setOnClickListener(this);
         table.setOnClickListener(this);
         xiadan.setOnClickListener(this);
         dao = new Dao(this);
@@ -187,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     for (Preview preview : mtbale) {
                         dao.createMtable(nortab, norNum, preview.getName(), preview.getMoney(), preview.getNumber(), preview.getWeight(), preview.getSpicy());
                     }
-                    managerLogin();
+                    Toast.makeText(this, "下单成功", Toast.LENGTH_SHORT).show();
                     dao.deletePreview();
                     gridAdapter.update(dao.createmenu(DishEnum.ENTREE));
                     previewListviewAdapter.update(new ArrayList<Preview>());
@@ -195,10 +198,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     nortab=0;
                     totalNumber.setText("0");
                     totalMoney.setText("0");
+                    norNum=1;
                 } else {
                     Toast.makeText(this, "请先选择哪号桌！", Toast.LENGTH_SHORT).show();
 
                 }
+                break;
+            case R.id.exchange:
+                managerLogin();
                 break;
         }
     }
@@ -215,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 Boolean isLogin = dao.login(user.getText().toString(), password.getText().toString());
                 if (isLogin) {
+                    alertDialog.dismiss();
                     startActivity(new Intent(MainActivity.this, ManageActivity.class));
                 } else {
                     Toast.makeText(MainActivity.this, "输入的账户或密码有误", Toast.LENGTH_SHORT).show();
