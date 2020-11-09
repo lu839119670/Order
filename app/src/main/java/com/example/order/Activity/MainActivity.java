@@ -177,24 +177,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button:
-                if (dao.queryPreview().size()==0){
-                    Toast.makeText(this,"请先选择菜哦！",Toast.LENGTH_SHORT).show();
-                }else{
+                if (dao.queryPreview().size() == 0) {
+                    Toast.makeText(this, "请先选择菜哦！", Toast.LENGTH_SHORT).show();
+                } else {
                     tableButtonClicked();
                 }
                 break;
             case R.id.button2:
-               if (nortab>0){
+                if (nortab > 0) {
                     List<Preview> mtbale = dao.queryPreview();
-                    for (int i=0;i<mtbale.size();i++){
-                        dao.createMtable(nortab,norNum,mtbale.get(i).getName(),mtbale.get(i).getMoney(),mtbale.get(i).getNumber(),mtbale.get(i).getWeight(),mtbale.get(i).getSpicy());
+                    for (Preview preview : mtbale) {
+                        dao.deleteTable(nortab);
+                        dao.createMtable(nortab, norNum, preview.getName(), preview.getMoney(), preview.getNumber(), preview.getWeight(), preview.getSpicy());
                     }
-                     managerLogin();
-                }else{
-                    Toast.makeText(this,"请先选择哪号桌！",Toast.LENGTH_SHORT).show();
+                    managerLogin();
+                } else {
+                    Toast.makeText(this, "请先选择哪号桌！", Toast.LENGTH_SHORT).show();
 
                 }
-
 
                 break;
 
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void managerLogin() {
-        final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_login, null);
         final EditText user = v.findViewById(R.id.editText);
         final EditText password = v.findViewById(R.id.editText2);
@@ -212,10 +212,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 Boolean isLogin = dao.login(user.getText().toString(), password.getText().toString());
-                if (isLogin){
-                    startActivity(new Intent(MainActivity.this,ManageActivity.class));
-                }else {
-                    Toast.makeText(MainActivity.this,"输入的账户或密码有误",Toast.LENGTH_SHORT).show();
+                if (isLogin) {
+                    startActivity(new Intent(MainActivity.this, ManageActivity.class));
+                } else {
+                    Toast.makeText(MainActivity.this, "输入的账户或密码有误", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -236,17 +236,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View v = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_table, null);
         TextView cancle = v.findViewById(R.id.textView28);
+        Button minus = v.findViewById(R.id.button6);
+        Button add = v.findViewById(R.id.button7);
+        final TextView number = v.findViewById(R.id.textView27);
+        Button choose = v.findViewById(R.id.button8);
 
         final TextView[] tableTextView = new TextView[4];
         tableTextView[0] = v.findViewById(R.id.textView19);
         tableTextView[1] = v.findViewById(R.id.textView21);
         tableTextView[2] = v.findViewById(R.id.textView23);
         tableTextView[3] = v.findViewById(R.id.textView25);
-
-        Button minus = v.findViewById(R.id.button6);
-        Button add = v.findViewById(R.id.button7);
-        final TextView number = v.findViewById(R.id.textView27);
-        Button choose = v.findViewById(R.id.button8);
 
         final RelativeLayout[] tableRelativeLayout = new RelativeLayout[4];
         tableRelativeLayout[0] = v.findViewById(R.id.table1);
@@ -255,101 +254,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tableRelativeLayout[3] = v.findViewById(R.id.table4);
         number.setText(norNum + "");
 
+        // 大量重复代码可以通过数组进行复用
+        // for循环 区间：[0, 3]
         for (int i = 0; i < tableTextView.length; i++) {
-            final boolean t = dao.chechTable(i + 1);
-            tableRelativeLayout[i].setBackgroundResource(t ? R.color.pink : R.color.table);
-            tableTextView[i].setText(t ? "有人" : "空闲");
+            // 遍历所有桌子是否有人，设置状态
+            boolean hasPeople = dao.chechTable(i + 1);
+            tableRelativeLayout[i].setBackgroundResource(hasPeople ? R.color.pink : R.color.table);
+            tableTextView[i].setText(hasPeople ? "有人" : "空闲");
 
             final int finalI = i;
+            // 循环添加点击监听
             tableRelativeLayout[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // 点击的时候再从数据库取一次是否有人
                     boolean t1 = dao.chechTable(finalI + 1);
-                    tableRelativeLayout[finalI].setBackgroundResource(t1 ? R.color.pink : R.color.table);
-                    tableTextView[finalI].setText(t1 ? "有人" : "空闲");
-                    nortab = finalI + 1;
+
+                    // 如果没有人
+                    if (!t1) {
+                        // 将layout设置成橙色表示已经选中
+                        tableRelativeLayout[finalI].setBackgroundResource(R.color.orienge);
+                        // 将全局变量设为当前选中桌子
+                        nortab = finalI + 1;
+                        // 遍历循环将其他桌子设置颜色
+                        for (int j = 0; j < tableRelativeLayout.length; j++) {
+                            // 遍历其他桌子是否有人
+                            boolean t2 = dao.chechTable(j + 1);
+                            // 判断是不是当前选中的桌子
+                            if (j != finalI) {
+                                // 三元修改颜色
+                                tableRelativeLayout[j].setBackgroundResource(t2 ? R.color.pink : R.color.table);
+                            }
+                        }
+                    }
                 }
             });
         }
-
-//        if (dao.chechTable(1)) {
-//            table1.setBackgroundResource(R.color.pink);
-//            oneTable.setText("有人");
-//        } else {
-//            table1.setBackgroundResource(R.color.table);
-//            oneTable.setText("空闲");
-//        }
-//
-//        if (dao.chechTable(2)) {
-//            table2.setBackgroundResource(R.color.pink);
-//            twoTable.setText("有人");
-//        } else {
-//            table2.setBackgroundResource(R.color.table);
-//            twoTable.setText("空闲");
-//        }
-//        if (dao.chechTable(3)) {
-//            table3.setBackgroundResource(R.color.pink);
-//            threeTable.setText("有人");
-//        } else {
-//            table3.setBackgroundResource(R.color.table);
-//            threeTable.setText("空闲");
-//        }
-//        if (dao.chechTable(4)) {
-//            table4.setBackgroundResource(R.color.pink);
-//            foutTable.setText("有人");
-//        } else {
-//            table4.setBackgroundResource(R.color.table);
-//            foutTable.setText("空闲");
-//        }
-//
-//        table1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (dao.chechTable(1)) {
-//                    table1.setBackgroundResource(R.color.pink);
-//                    oneTable.setText("有人");
-//                } else {
-//                    table1.setBackgroundResource(R.color.orienge);
-//                    nortab = 1;
-//                }
-//            }
-//        });
-//        table2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (dao.chechTable(2)) {
-//                    table2.setBackgroundResource(R.color.pink);
-//                    twoTable.setText("有人");
-//                } else {
-//                    table2.setBackgroundResource(R.color.orienge);
-//                    nortab = 2;
-//                }
-//            }
-//        });
-//        table3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (dao.chechTable(3)) {
-//                    table3.setBackgroundResource(R.color.pink);
-//                    threeTable.setText("有人");
-//                } else {
-//                    table3.setBackgroundResource(R.color.orienge);
-//                    nortab = 3;
-//                }
-//            }
-//        });
-//        table4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (dao.chechTable(4)) {
-//                    table4.setBackgroundResource(R.color.pink);
-//                    foutTable.setText("有人");
-//                } else {
-//                    table4.setBackgroundResource(R.color.orienge);
-//                    nortab = 4;
-//                }
-//            }
-//        });
 
         minus.setOnClickListener(new View.OnClickListener() {
             @Override
