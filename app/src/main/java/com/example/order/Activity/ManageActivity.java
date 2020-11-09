@@ -57,6 +57,7 @@ public class ManageActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 bottomBar.selectTabAtPosition(position);
+
             }
 
             @Override

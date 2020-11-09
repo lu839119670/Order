@@ -1,7 +1,9 @@
 package com.example.order.Activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView totalMoney;
     private ImageView exchange;
     private PreviewListviewAdapter previewListviewAdapter;
+
 
     /**
      * 枚举数组，用于确定从数据库中取得哪个类别菜品<br/>

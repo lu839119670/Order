@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="zhekou">
+        <item>没有折扣</item>
+        <item>6折</item>
+        <item>7折</item>
+        <item>8折</item>
+        <item>9折</item>
+    </string-array>
+</resources>
