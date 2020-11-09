@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (nortab > 0) {
                     List<Preview> mtbale = dao.queryPreview();
                     for (Preview preview : mtbale) {
-                        dao.deleteTable(nortab);
                         dao.createMtable(nortab, norNum, preview.getName(), preview.getMoney(), preview.getNumber(), preview.getWeight(), preview.getSpicy());
                     }
                     managerLogin();
