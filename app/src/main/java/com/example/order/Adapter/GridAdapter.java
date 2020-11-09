@@ -48,6 +48,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     public void update(List<Menu> list) {
         this.list = list;
+        notifyDataSetChanged();
     }
 
 

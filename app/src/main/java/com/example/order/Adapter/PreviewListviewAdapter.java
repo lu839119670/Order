@@ -56,6 +56,7 @@ public class PreviewListviewAdapter extends BaseAdapter {
 
     public void update(List<Preview> list) {
         this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override

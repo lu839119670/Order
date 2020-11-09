@@ -28,10 +28,11 @@ public class ManagerFragment extends Fragment {
     private Button add;
     private AlertDialog alertDialog;
     private ManagerListViewAdapter managerListViewAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.managerfragment,null);
+        return inflater.inflate(R.layout.managerfragment, null);
     }
 
     @Override
@@ -48,14 +49,15 @@ public class ManagerFragment extends Fragment {
     }
 
     private void init(View view) {
-        listView= view.findViewById(R.id.managerListview);
-        add=view.findViewById(R.id.button12);
-        dao=new Dao(getContext());
-        list=dao.queryManager();
-        managerListViewAdapter=new ManagerListViewAdapter(list,getContext());
+        listView = view.findViewById(R.id.managerListview);
+        add = view.findViewById(R.id.button12);
+        dao = new Dao(getContext());
+        list = dao.queryManager();
+        managerListViewAdapter = new ManagerListViewAdapter(list, getContext());
     }
-    public void createAddDialog(){
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+
+    public void createAddDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_addmanager, null);
         final EditText user = v.findViewById(R.id.editText3);
         final EditText password = v.findViewById(R.id.editText4);
@@ -75,20 +77,20 @@ public class ManagerFragment extends Fragment {
                 String sexValue = sex.getText().toString();
                 String positionValue = position.getText().toString();
                 String phoneValue = pohone.getText().toString();
-                if (userValue.equals("")){
-                    Toast.makeText(getContext(),"用户名不能为空",Toast.LENGTH_SHORT).show();
-                }else if (passwordValue.equals("")){
-                    Toast.makeText(getContext(),"密码不能为空",Toast.LENGTH_SHORT).show();
-                }else if (nameValue.equals("")){
-                    Toast.makeText(getContext(),"姓名不能为空",Toast.LENGTH_SHORT).show();
-                }else if (sexValue.equals("")){
-                    Toast.makeText(getContext(),"性别不能为空",Toast.LENGTH_SHORT).show();
-                }else if (positionValue.equals("")){
-                    Toast.makeText(getContext(),"职位不能为空",Toast.LENGTH_SHORT).show();
-                }else if (phoneValue.equals("")){
-                    Toast.makeText(getContext(),"手机号码不能为空",Toast.LENGTH_SHORT).show();
-                }else{
-                    dao.createManager(userValue,passwordValue,nameValue,sexValue,positionValue,phoneValue);
+                if (userValue.equals("")) {
+                    Toast.makeText(getContext(), "用户名不能为空", Toast.LENGTH_SHORT).show();
+                } else if (passwordValue.equals("")) {
+                    Toast.makeText(getContext(), "密码不能为空", Toast.LENGTH_SHORT).show();
+                } else if (nameValue.equals("")) {
+                    Toast.makeText(getContext(), "姓名不能为空", Toast.LENGTH_SHORT).show();
+                } else if (sexValue.equals("")) {
+                    Toast.makeText(getContext(), "性别不能为空", Toast.LENGTH_SHORT).show();
+                } else if (positionValue.equals("")) {
+                    Toast.makeText(getContext(), "职位不能为空", Toast.LENGTH_SHORT).show();
+                } else if (phoneValue.equals("")) {
+                    Toast.makeText(getContext(), "手机号码不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    dao.createManager(userValue, passwordValue, nameValue, sexValue, positionValue, phoneValue);
                     alertDialog.dismiss();
                     List<Manager> list1 = dao.queryManager();
                     managerListViewAdapter.update(list1);

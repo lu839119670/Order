@@ -1,20 +1,15 @@
 package com.example.order.Activity;
 
 import android.os.Bundle;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-
 import com.example.order.Adapter.ViewpagerAdapter;
 import com.example.order.Fragment.CostFragment;
 import com.example.order.Fragment.ManagerFragment;
 import com.example.order.R;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
@@ -33,6 +28,7 @@ public class ManageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage);
         init();
+
 
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(viewpagerAdapter);

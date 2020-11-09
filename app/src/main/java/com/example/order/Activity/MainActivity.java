@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 listView1.setVisibility(View.VISIBLE);
                 List<Preview> previews = dao.queryPreview();
                 previewListviewAdapter.update(previews);
-                previewListviewAdapter.notifyDataSetChanged();
                 setTotalNumber();
                 setTotalMoney();
 
@@ -121,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateMenuView(DishEnum witch) {
         List<Menu> menus = dao.createmenu(witch);
         gridAdapter.update(menus);
-        gridAdapter.notifyDataSetChanged();
         checkListStatus();
     }
 
@@ -190,13 +188,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         dao.createMtable(nortab, norNum, preview.getName(), preview.getMoney(), preview.getNumber(), preview.getWeight(), preview.getSpicy());
                     }
                     managerLogin();
+                    dao.deletePreview();
+                    gridAdapter.update(dao.createmenu(DishEnum.ENTREE));
+                    previewListviewAdapter.update(new ArrayList<Preview>());
+                    checkListStatus();
                 } else {
                     Toast.makeText(this, "请先选择哪号桌！", Toast.LENGTH_SHORT).show();
 
                 }
-
                 break;
-
         }
     }
 
@@ -224,7 +224,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 alertDialog.dismiss();
             }
         });
-
 
         builder.setView(v);
         alertDialog = builder.create();
